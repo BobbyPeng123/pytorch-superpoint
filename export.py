@@ -333,11 +333,13 @@ def export_detector_homoAdapt_gpu(config, output_dir, args):
 
         ## - make directories
         filename = str(name)
+        datename = filename.split("/")[0]
+        filename = filename.split("/")[1]
         if task == "Kitti" or "Kitti_inh":
             scene_name = sample["scene_name"][0]
-            os.makedirs(Path(save_output, scene_name), exist_ok=True)
+            os.makedirs(Path(save_output/datename, scene_name), exist_ok=True)
 
-        path = Path(save_output, "{}.npz".format(filename))
+        path = Path(save_output/datename, "{}.npz".format(filename))
         np.savez_compressed(path, **pred)
 
         ## output images for visualization labels
@@ -397,7 +399,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     with open(args.config, "r") as f:
-        config = yaml.load(f)
+        config = yaml.full_load(f)
     print("check config!! ", config)
 
     output_dir = os.path.join(EXPER_PATH, args.exper_name)
